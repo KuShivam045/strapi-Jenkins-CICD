@@ -1,0 +1,28 @@
+pipeline {
+  agent any
+
+  stages {
+    stage('Checkout Code and Dockerfile') {
+      steps {
+        script {
+          // Use Git SCM plugin to checkout code and Dockerfile
+          git branch: 'main', // Change branch if needed
+             credentialsId: 'ad58d109-9c2c-4fee-b7aa-a7c7c551b39f', // Replace with your credentials ID
+             url: 'https://github.com/kushivam045/strapi-Jenkins-CICD.git'
+        }
+      }
+    }
+    stage('Building Image') {
+      steps {
+        sh 'docker build -t strapi-cicd .'
+      }
+    }
+    stage('Running the Image') {
+      steps {
+        script {
+          sh "docker run -d --name=strapi -p 3000:1337 strapi-cicd"
+        }
+      }
+    }
+  }
+}
